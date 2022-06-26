@@ -17,7 +17,7 @@ void typeWriter(string str,int sleepTime){
     cout<<endl;
 }
 
-bool checkFullBoard( char** board )
+bool checkFullBoard( char board[][10] )
 {
 	int full;
 	full = 0;
@@ -32,7 +32,7 @@ bool checkFullBoard( char** board )
 	return false;
 }
 
-bool restartGame ( char **board )
+bool restartGame ( char board[][10] )
 {
 	char restart;
 	string endGame[2];
@@ -63,7 +63,7 @@ void PlayerWin ( playerInfo activePlayer )
 	typeWriter(winMessage,30);
 }
 
-bool checkWin ( char** board, playerInfo activePlayer )
+bool checkWin ( char board[][10], playerInfo activePlayer )
 {
 	char RB= activePlayer.playerID;
 	for( int i = 7; i >0; --i )
@@ -93,7 +93,7 @@ bool checkWin ( char** board, playerInfo activePlayer )
 return false;
 }
 
-char **putBall ( char **board, playerInfo activePlayer, int dropBall )
+void putBall ( char board[][10], playerInfo activePlayer, int dropBall )
 {
 	int length=6;
 	bool turn = false;
@@ -107,10 +107,9 @@ char **putBall ( char **board, playerInfo activePlayer, int dropBall )
 		else
 		--length;
 	}
-	return board;
 }
 
-int PlayerDrop(char **board,playerInfo activePlayer)
+int PlayerDrop(char board[][10],playerInfo activePlayer)
 {
 	int dropBall;
 	string drop[3];
@@ -132,13 +131,13 @@ int PlayerDrop(char **board,playerInfo activePlayer)
     return dropBall;
 }
 
-void PrintBoard(char** board)
+void PrintBoard(char board[][10])
 {
 	int rows=6, columns=7;
-	for(int i=0;i<rows;i++)
+	for(int i=1;i<=rows;i++)
 	{
 		cout <<"|";
-		for(int j=0;j<columns;j++)
+		for(int j=1;j<=columns;j++)
 		{
 			if((board[i][j]!='R')&&(board[i][j]!='B')){
                 board[i][j]='*';
@@ -152,8 +151,8 @@ void PrintBoard(char** board)
 
 void gameController(){
     playerInfo playerOne, playerTwo;
-	//char Board[9][10];
-	char**Board= new char*[10];
+	char Board[9][10];
+	//char**Board= new char*[10];
 	int Choice;
 	bool Win=false, Full=false, Repeat=false;
 	string startGame[3];
@@ -177,41 +176,41 @@ void gameController(){
     }
     cout<<endl<<endl<<endl;
     Sleep(2000);
-    PrintBoard((char**)Board);
+    PrintBoard(Board);
     Sleep(1000);
     do{
-	    Choice = PlayerDrop( (char**)Board, playerOne );
-		Board=putBall( (char**)Board, playerOne, Choice );
+	    Choice = PlayerDrop( Board, playerOne );
+		putBall( Board, playerOne, Choice );
 		PrintBoard( Board );
-		Win = checkWin( (char**)Board, playerOne );
+		Win = checkWin(Board, playerOne );
 		if ( Win  )
 		{
 			PlayerWin(playerOne);
-			Repeat = restartGame((char**)Board);
+			Repeat = restartGame(Board);
 			if (Repeat == false)
 			{
 				break;
 			}
 		}
 
-		Choice = PlayerDrop( (char**)Board, playerTwo );
-		putBall( (char**)Board, playerTwo, Choice );
+		Choice = PlayerDrop(Board, playerTwo );
+		putBall( Board, playerTwo, Choice );
 		PrintBoard( Board );
-		Win = checkWin( (char**)Board, playerTwo );
+		Win = checkWin( Board, playerTwo );
 		if ( Win )
 		{
 			PlayerWin(playerTwo);
-			Repeat = restartGame((char**)Board);
+			Repeat = restartGame(Board);
 			if (Repeat == false)
 			{
 				break;
 			}
 		}
-		Full = checkFullBoard( (char**)Board );
+		Full = checkFullBoard( Board );
 		if ( Full  )
 		{
 		    typeWriter(drawMessage,30);
-			Repeat = restartGame((char**)Board);
+			Repeat = restartGame(Board);
 		}
 
 	} while ( Repeat != true );
